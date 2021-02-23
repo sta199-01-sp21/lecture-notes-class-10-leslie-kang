@@ -1,7 +1,7 @@
 ---
 title: "Introduction to probability"
-author: ""
-date: ""
+author: "Leslie Kang"
+date: "Feb 22, 2021"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -49,17 +49,21 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
 ```
 
 - How many patients were enrolled in the clinical trial?
+  84 patients were enrolled.
 
 - What is the probability a randomly selected patient received the placebo?
+  0.5119048
 
-- What is the probability a randomly selected patient received the placebo
-  and had a marked improvement?
+- What is the probability a randomly selected patient received the placebo and had a marked improvement?
+  0.006944444
   
 - What is the probability a randomly selected patient received the placebo
   and the treatment?
+  0
   
 - What is the probability a randomly selected patient had some improvement or
   was on the treatment?
+  0.6547619
 
 ## Using computer simulations to calculate probabilities
 
@@ -101,6 +105,7 @@ prop.table(counts)
 ```
 
 How close is this value to the "true" probability?
+Red is a little above, Blue is a little below, and White is pretty much spot on.
 
 **To summarize our process:**
 
@@ -117,6 +122,7 @@ color if we make two draws with replacement? We haven't discussed how to
 compute this theoretically yet, but this is what computers are good at.
 
 Before we do this, what is your guess as to what the probability will be?
+  0.40625
 
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
@@ -158,15 +164,23 @@ Perform a simulation to compute this empirical probability.
 Write down your guess to the answer before you calculate it.
 
 ```{r simulate_rolls}
-
+roll_results <- tibble(
+  die_1 = replicate(n = 10000, expr = sample(1:6, size = 1)),
+  die_2 = replicate(n = 10000, expr = sample(1:6, size = 1))
+)
 ```
 
 ```{r identify_events}
-
+roll_results <- roll_results %>% 
+  mutate(square = die_1 ^ 2 == die_2,
+         absolute = abs(die_1 - die_2) == 4)
+roll_results
 ```
 
 ```{r summarize_rolls}
-
+roll_results %>% 
+  summarize(square_prob = mean(square),
+            absolute_prob = mean(absolute))
 ```
 
 ## Additional Resources-please look at before Weds.
